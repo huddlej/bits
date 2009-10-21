@@ -12,3 +12,6 @@ http://localhost:5984/bits/_design/bits/_show/add-item
 
 Edit an item:
 http://localhost:5984/bits/_design/bits/_show/edit-item/<docid>
+
+List of items checked out to user:
+http://localhost:5984/bits/_design/bits/_view/items-by-user?include_docs=true&key="<username>"
