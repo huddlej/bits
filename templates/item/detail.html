@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Item Detail: <%= name %></title>
+    <link rel="stylesheet" href="<%= assets %>/style/main.css" type="text/css">
+</head>
+<body>
+
+<ol class="menu">
+    <li><a href="<%= index_url %>">Back to inventory</a></li>
+</ol>
+
+<h1><%= name %></h1>
+<ol class="menu">
+    <li><a href="<%= edit_item_url %>">Edit</a></li>
+</ol>
+
+<dl class="item">
+    <dt>Condition</dt>
+    <dd><%= condition %></dd>
+    <dt>Checked Out To</dt>
+    <dd><%= checked_out_to %></dd>
+    <dt>Checked Out From</dt>
+    <dd><%= checked_out_from %></dd>
+    <dt>Tags</dt>
+    <dd><%= tags %></dd>
+</dl>
+</body>
+</html>

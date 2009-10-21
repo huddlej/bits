@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Editing: <%= name %></title>
+    <link rel="stylesheet" href="<%= assets %>/style/main.css" type="text/css">
+</head>
+<body>
+<a href="<%= index_url %>">Back to inventory</a>
+
+<h1>Editing: <a href="<%= item_url %>"><%= name %></a></h1>
+
+<div id="status"></div>
+<form id="edit-item" action="" method="post">
+<dl class="item">
+    <dt>Name</dt>
+    <dd><input type="text" name="name" /></dd>
+
+    <dt>Condition</dt>
+    <dd>
+        <select name="condition">
+            <option value="new">new</option>
+            <option value="ok">ok</option>
+            <option value="used">used</option>
+        </select>
+    </dd>
+
+    <dt>Checked out to</dt>
+    <dd><input type="text" name="checked_out_to" /></dd>
+
+    <dt>Tags</dt>
+    <dd><input type="text" name="tags" /></dd>
+</dl>
+<p>
+    <input type="submit" value="Save" />
+    <input id="delete" type="button" value="Delete" />
+</p>
+</form>
+</body>
+
+<script src="/_utils/script/json2.js"></script>
+<script src="/_utils/script/jquery.js?1.2.6"></script>
+<script src="/_utils/script/jquery.couch.js?0.8.0"></script>
+<script src="/_utils/script/jquery.cookies.js"></script>
+<script src="<%= assets %>/vendor/couchapp/jquery.couchapp.js"></script>
+<script type="text/javascript" charset="utf-8">
+$.CouchApp(function(app) {
+    app.loggedInNow(function(login) {
+        $("form input, form select").attr("disabled", "disabled");
+
+        var postForm = app.docForm("form#edit-item", {
+            id : <%= docid %>,
+            fields : ["name", "condition", "checked_out_to", "tags"],
+            template : {
+                type: "item",
+                created_by: login
+            },
+            onLoad : function(doc) {
+                if (doc._id) {
+                    $("#delete").click(function() {
+                        postForm.deleteDoc({
+                            success: function(resp) {
+                                $("h1").text("Deleted " + doc.name);
+                                $('form#edit-item input').attr('disabled', true);
+                            }
+                        });
+                        return false;
+                    });
+                }
+
+                $("form input, form select").removeAttr("disabled");
+            },
+            beforeSave : function(doc) {
+                if(!doc.condition) {
+                    doc.condition = "ok";
+                }
+                if(doc.tags) {
+                    doc.tags = doc.tags.split(",");
+                    for(var idx in doc.tags) {
+                      doc.tags[idx] = $.trim(doc.tags[idx]);
+                    }
+                }
+            },
+            success: function(resp) {
+                $("#status").text("Item updated!").fadeIn(500).fadeOut(3000);
+            }
+        });
+    },
+    function() {
+        console.log(app);
+        app.go('<%= assets %>/account.html#'+document.location);
+    });
+});
+</script>
+</html>

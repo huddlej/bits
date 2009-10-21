@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Add an Item</title>
+</head>
+<body>
+<a href="<%= index_url %>">Back to inventory</a>
+
+<h1>Add an Item</h1>
+
+<div id="status"></div>
+<form id="add-item" action="" method="post">
+<dl>
+    <dt>Name</dt>
+    <dd><input type="text" name="name" /></dd>
+
+    <dt>Tags</dt>
+    <dd><input type="text" name="tags" /></dd>
+</dl>
+<p><input type="submit" value="Add item" /></p>
+</form>
+</body>
+
+<script src="/_utils/script/json2.js"></script>
+<script src="/_utils/script/jquery.js?1.2.6"></script>
+<script src="/_utils/script/jquery.couch.js?0.8.0"></script>
+<script src="/_utils/script/jquery.cookies.js"></script>
+<script src="<%= assets %>/vendor/couchapp/jquery.couchapp.js"></script>
+<script type="text/javascript" charset="utf-8">
+$.CouchApp(function(app) {
+    app.loggedInNow(function(login) {
+        var postForm = app.docForm("form#add-item", {
+            fields : ["name", "tags"],
+            template : {
+                type: "item",
+                created_by: login
+            },
+            beforeSave : function(doc) {
+                if(!doc.condition) {
+                    doc.condition = "ok";
+                }
+                if(doc.tags) {
+                    doc.tags = doc.tags.split(",");
+                    for(var idx in doc.tags) {
+                      doc.tags[idx] = $.trim(doc.tags[idx]);
+                    }
+                }
+            },
+            success : function(resp) {
+                $("#status").text("Saved _rev: "+resp.rev).fadeIn(500).fadeOut(3000);
+            }
+        });
+    },
+    function() {
+        console.log(app);
+        app.go('<%= assets %>/account.html#'+document.location);
+    });
+});
+</script>
+</html>

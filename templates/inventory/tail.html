@@ -1,0 +1,37 @@
+</table>
+</body>
+
+<script src="/_utils/script/json2.js"></script>
+<script src="/_utils/script/jquery.js?1.2.6"></script>
+<script src="/_utils/script/jquery.couch.js?0.8.0"></script>
+<script src="/_utils/script/jquery.cookies.js"></script>
+<script src="<%= assets %>/vendor/couchapp/jquery.couchapp.js"></script>
+<script type="text/javascript" charset="utf-8">
+$.CouchApp(function(app) {
+    app.loggedInNow(function(login) {
+        $("a.check-in").click(function (event) {
+            var docid = this.hash.substr(1),
+                checkin_link = $(this);
+            console.log("checked in: " + docid);
+            app.db.openDoc(docid, {
+                success: function(doc) {
+                    delete doc.checked_out_to;
+                    app.db.saveDoc(doc, {
+                        success : function(resp) {
+                            checkin_link.text("check out");
+                            console.log(doc);
+                        }
+                    });
+                }
+            });
+            event.preventDefault();
+        });
+
+        $("a.check-out").click(function (event) {
+            console.log("checked out!");
+            event.preventDefault();
+        });
+    });
+});
+</script>
+</html>

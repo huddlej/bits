@@ -1,0 +1,24 @@
+table tr:hover {
+    background-color: #ffffbc;
+}
+
+table th, table td {
+    padding: 0.1em 0.4em;
+}
+
+table th {
+    background-color: #bcceff;
+    text-align: left;
+}
+
+table td {
+    border-bottom: 1px dotted #cccccc;
+}
+
+dl.item dt {
+    border-bottom: 1px dotted #cccccc;
+    clear: left;
+    float: left;
+    padding: 0 1em 0 0;
+    width: 155px;
+}
