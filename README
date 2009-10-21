@@ -5,7 +5,10 @@ List of items:
 http://localhost:5984/bits/_design/bits/_list/inventory/items-by-name?include_docs=true
 
 View one item:
-http://localhost:5984/bits/_design/bits/_show/item/<somedocid>
+http://localhost:5984/bits/_design/bits/_show/item/<docid>
 
 Add an item:
-http://localhost:5984/bits/_design/bits/_show/items/
+http://localhost:5984/bits/_design/bits/_show/add-item
+
+Edit an item:
+http://localhost:5984/bits/_design/bits/_show/edit-item/<docid>
