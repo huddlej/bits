@@ -1,0 +1,11 @@
+View:
+http://localhost:5984/bits/_all_docs?include_docs=true
+
+List of items:
+http://localhost:5984/bits/_design/bits/_list/inventory/items-by-name?include_docs=true
+
+View one item:
+http://localhost:5984/bits/_design/bits/_show/item/<somedocid>
+
+Add an item:
+http://localhost:5984/bits/_design/bits/_show/items/
