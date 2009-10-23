@@ -15,7 +15,7 @@ function (head, req) {
                 name: row.doc.name,
                 condition: row.doc.condition,
                 tags: row.doc.tags || "&nbsp;",
-                item_url: showPath("item", row.doc._id)
+                item_url: showPath("edit-item", row.doc._id)
             };
 
             if (row.doc.checked_out_to == null) {

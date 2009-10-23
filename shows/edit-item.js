@@ -11,7 +11,6 @@ function (doc, req) {
                 name: doc.name,
                 index_url: listPath("inventory", "items-by-name",
                                      {include_docs: true}),
-                item_url: showPath("item", doc._id),
                 assets: assetPath()
             })
         };

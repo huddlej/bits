@@ -6,13 +6,10 @@
 <body>
 <a href="<%= index_url %>">Back to inventory</a>
 
-<h1>Editing: <a href="<%= item_url %>"><%= name %></a></h1>
-
 <div id="status"></div>
 <form id="edit-item" action="" method="post">
 <dl class="item">
-    <dt>Name</dt>
-    <dd><input type="text" name="name" /></dd>
+    <h1><input id="name" type="text" name="name" /></h1>
 
     <dt>Condition</dt>
     <dd>
@@ -23,11 +20,11 @@
         </select>
     </dd>
 
-    <dt>Checked out to</dt>
-    <dd><input type="text" name="checked_out_to" /></dd>
-
     <dt>Tags</dt>
     <dd><input type="text" name="tags" /></dd>
+
+    <dt>Checked out to</dt>
+    <dd><input type="text" name="checked_out_to" /></dd>
 </dl>
 <p>
     <input type="submit" value="Save" />

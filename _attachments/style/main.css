@@ -22,3 +22,7 @@ dl.item dt {
     padding: 0 1em 0 0;
     width: 155px;
 }
+
+#edit-item input#name {
+    font-size: 1em;
+}
