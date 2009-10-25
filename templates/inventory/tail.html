@@ -20,8 +20,8 @@
 <script type="text/javascript" charset="utf-8">
 $.CouchApp(function(app) {
     app.loggedInNow(function(login) {
-        // Setup check-in hooks.
-        $("a.check-in").live("click", function (event) {
+        // Setup checkin hooks.
+        $("a.checkin").live("click", function (event) {
             var docid = this.hash.substr(1),
                 checkin_link = $(this),
                 checkout_form;
@@ -33,8 +33,8 @@ $.CouchApp(function(app) {
                         success : function(resp) {
                             var status;
                             checkin_link.text("check out")
-                                        .removeClass("check-in")
-                                        .addClass("check-out");
+                                        .removeClass("checkin")
+                                        .addClass("checkout");
                             status = checkin_link.parent().nextAll(".status");
                             status.text("in");
                             console.log(doc);
@@ -45,7 +45,7 @@ $.CouchApp(function(app) {
             event.preventDefault();
         });
 
-        // Setup check-out hooks.
+        // Setup checkout hooks.
         checkout_form = $("#checkout-dialog form");
 
         $("#checkout-dialog").dialog({
@@ -65,8 +65,8 @@ $.CouchApp(function(app) {
                                     var checkout_link = $("a[href='#" + docid + "']"),
                                         status;
                                     checkout_link.text("check in")
-                                                 .removeClass("check-out")
-                                                 .addClass("check-in");
+                                                 .removeClass("checkout")
+                                                 .addClass("checkin");
                                     status = checkout_link.parent().nextAll(".status");
                                     status.text("out to " + checkout_to);
                                 }
@@ -90,7 +90,7 @@ $.CouchApp(function(app) {
             $(this).parent().parent().find("button:first").click();
         });
 
-        $("a.check-out").live("click", function (event) {
+        $("a.checkout").live("click", function (event) {
             event.preventDefault();
             var checkout_dialog = $("#checkout-dialog");
 
