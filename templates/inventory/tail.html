@@ -92,8 +92,16 @@ $.CouchApp(function(app) {
 
         $("a.check-out").live("click", function (event) {
             event.preventDefault();
+            var checkout_dialog = $("#checkout-dialog");
+
+            // Close the checkout dialog if it is already open.  This will
+            // prepare the dialog to be used for another item.
+            if (checkout_dialog.dialog("isOpen")) {
+                checkout_dialog.dialog("close");
+            }
+
             $("#checkout-item-id").val(this.hash.substr(1));
-            $("#checkout-dialog").dialog("open");
+            checkout_dialog.dialog("open");
         });
     });
 });
