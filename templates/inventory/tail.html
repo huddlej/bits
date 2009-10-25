@@ -1,4 +1,13 @@
 </table>
+
+<div id="checkout-dialog" title="Checkout Item">
+    <form id="checkout-form">
+    <fieldset>
+        <label>User:</label>
+        <input type="text" name="check_out_to" id="check_out_to" />
+    </fieldset>
+    </form>
+</div>
 </body>
 
 <script src="/_utils/script/json2.js"></script>
@@ -6,9 +15,11 @@
 <script src="/_utils/script/jquery.couch.js?0.8.0"></script>
 <script src="/_utils/script/jquery.cookies.js"></script>
 <script src="<%= assets %>/vendor/couchapp/jquery.couchapp.js"></script>
+<script src="<%= assets %>/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf-8">
 $.CouchApp(function(app) {
     app.loggedInNow(function(login) {
+        // Setup check-in hooks.
         $("a.check-in").click(function (event) {
             var docid = this.hash.substr(1),
                 checkin_link = $(this);
@@ -32,9 +43,29 @@ $.CouchApp(function(app) {
             event.preventDefault();
         });
 
-        $("a.check-out").click(function (event) {
-            console.log("checked out!");
+        // Setup check-out hooks.
+        $("#checkout-dialog").dialog({
+            autoOpen: false,
+            buttons: {
+                "Checkout": function () {
+                    console.log("checked out to: " + $("#check_out_to").val());
+                    $(this).dialog("close");
+                },
+                "Cancel": function () {
+                    console.log("cancel checkout");
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#checkout-dialog form").submit(function () {
             event.preventDefault();
+            return false;
+            $(this).parent().parent().find("button:first").click();
+        });
+
+        $("a.check-out").click(function (event) {
+            event.preventDefault();
+            $("#checkout-dialog").dialog("open");
         });
     });
 });
