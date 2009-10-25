@@ -20,12 +20,12 @@ function (head, req) {
 
             if (row.doc.checked_out_to == null) {
                 context["status"] = "in";
-                context["action_class"] = "check-out";
+                context["action_class"] = "checkout";
                 context["action_type"] = "check out";
             }
             else {
                 context["status"] = "out to " + row.doc.checked_out_to;
-                context["action_class"] = "check-in";
+                context["action_class"] = "checkin";
                 context["action_type"] = "check in";
             }
 
