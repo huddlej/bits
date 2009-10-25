@@ -26,11 +26,3 @@ dl.item dt {
 #edit-item input#name {
     font-size: 1em;
 }
-
-/* Dialog box styles. */
-
-.ui-dialog {
-    position: relative !important;
-    left: 0px !important;
-    top: 0px !important;
-}
