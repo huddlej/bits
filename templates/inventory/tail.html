@@ -29,6 +29,8 @@ $.CouchApp(function(app) {
             app.db.openDoc(docid, {
                 success: function(doc) {
                     delete doc.checked_out_to;
+                    delete doc.checked_out_from;
+
                     app.db.saveDoc(doc, {
                         success : function(resp) {
                             var status;
