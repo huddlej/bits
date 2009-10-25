@@ -100,7 +100,14 @@ $.CouchApp(function(app) {
                 checkout_dialog.dialog("close");
             }
 
+            // Load the item id for the item clicked into the checkout form's
+            // hidden item id field.
             $("#checkout-item-id").val(this.hash.substr(1));
+
+            // Position the checkout dialog next to the link that the user
+            // clicked.
+            checkout_dialog.dialog("option", "position", [event.pageX, event.pageY])
+
             checkout_dialog.dialog("open");
         });
     });
