@@ -4,7 +4,8 @@
     <form id="checkout-form">
     <fieldset>
         <label>User:</label>
-        <input type="text" name="check_out_to" id="check_out_to" />
+        <input type="text" name="checkout_to" id="checkout-to" />
+        <input type="hidden" name="item_id" id="checkout-item-id" />
     </fieldset>
     </form>
 </div>
@@ -20,9 +21,10 @@
 $.CouchApp(function(app) {
     app.loggedInNow(function(login) {
         // Setup check-in hooks.
-        $("a.check-in").click(function (event) {
+        $("a.check-in").live("click", function (event) {
             var docid = this.hash.substr(1),
-                checkin_link = $(this);
+                checkin_link = $(this),
+                checkout_form;
             console.log("checked in: " + docid);
             app.db.openDoc(docid, {
                 success: function(doc) {
@@ -44,27 +46,53 @@ $.CouchApp(function(app) {
         });
 
         // Setup check-out hooks.
+        checkout_form = $("#checkout-dialog form");
+
         $("#checkout-dialog").dialog({
             autoOpen: false,
             buttons: {
                 "Checkout": function () {
-                    console.log("checked out to: " + $("#check_out_to").val());
+                    var checkout_to = $("#checkout-to").val(),
+                        docid = $("#checkout-item-id").val();
+                    console.log("checked out " + docid + " to: " + checkout_to);
+                    app.db.openDoc(docid, {
+                        success: function(doc) {
+                            doc.checked_out_to = checkout_to;
+                            doc.checked_out_from = login;
+                            console.log(doc);
+                            app.db.saveDoc(doc, {
+                                success : function(resp) {
+                                    var checkout_link = $("a[href='#" + docid + "']"),
+                                        status;
+                                    checkout_link.text("check in")
+                                                 .removeClass("check-out")
+                                                 .addClass("check-in");
+                                    status = checkout_link.parent().nextAll(".status");
+                                    status.text("out to " + checkout_to);
+                                }
+                            });
+                        }
+                    });
                     $(this).dialog("close");
                 },
                 "Cancel": function () {
                     console.log("cancel checkout");
                     $(this).dialog("close");
                 }
+            },
+            close: function () {
+                checkout_form.find("input").val("");
             }
         });
-        $("#checkout-dialog form").submit(function () {
+        checkout_form.submit(function () {
             event.preventDefault();
             return false;
             $(this).parent().parent().find("button:first").click();
         });
 
-        $("a.check-out").click(function (event) {
+        $("a.check-out").live("click", function (event) {
             event.preventDefault();
+            $("#checkout-item-id").val(this.hash.substr(1));
             $("#checkout-dialog").dialog("open");
         });
     });
