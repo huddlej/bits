@@ -18,7 +18,12 @@ $.CouchApp(function(app) {
                     delete doc.checked_out_to;
                     app.db.saveDoc(doc, {
                         success : function(resp) {
-                            checkin_link.text("check out");
+                            var status;
+                            checkin_link.text("check out")
+                                        .removeClass("check-in")
+                                        .addClass("check-out");
+                            status = checkin_link.parent().nextAll(".status");
+                            status.text("in");
                             console.log(doc);
                         }
                     });
