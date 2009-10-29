@@ -4,7 +4,7 @@ View:
 http://localhost:5984/bits/_all_docs?include_docs=true
 
 List of items:
-http://localhost:5984/bits/_design/bits/_list/inventory/items-by-name?include_docs=true
+http://localhost:5984/bits/_design/bits/index.html
 
 View one item:
 http://localhost:5984/bits/_design/bits/_show/item/<docid>
