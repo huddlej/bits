@@ -1,3 +1,5 @@
+Client-side rendering using Tempest (http://github.com/fitzgen/tempest/)
+
 View:
 http://localhost:5984/bits/_all_docs?include_docs=true
 
