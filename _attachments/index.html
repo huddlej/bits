@@ -1,0 +1,158 @@
+<html>
+<head>
+    <title>Inventory</title>
+    <link rel="stylesheet" href="style/jquery-ui.css" type="text/css">
+    <link rel="stylesheet" href="style/main.css" type="text/css">
+</head>
+
+<body>
+<ol class="menu">
+    <li><a href="_show/add-item/">Add an item</a></li>
+</ol>
+
+<h1>Inventory</h1>
+
+<table id="inventory">
+<tr>
+    <th>Action</th>
+    <th>Name</th>
+    <th>Condition</th>
+    <th>Status</th>
+    <th>Tags</th>
+</tr>
+</table>
+
+<div id="checkout-dialog" title="Checkout Item">
+    <form id="checkout-form">
+    <fieldset>
+        <label>User:</label>
+        <input type="text" name="checkout_to" id="checkout-to" />
+        <input type="hidden" name="item_id" id="checkout-item-id" />
+    </fieldset>
+    </form>
+</div>
+
+<textarea class="tempest-template" title="row">
+<tr>
+    <td class="action"><a href="#{{ id }}" class="{{ action_class }}">{{ action_type }}</a></td>
+    <td class="name"><a href="_show/edit-item/{{ id }}">{{ name }}</a></td>
+    <td class="condition">{{ condition }}</td>
+    <td class="status">{{ status }}</td>
+    <td class="tags">{{ tags }}</td>
+</tr>
+</textarea>
+
+</body>
+
+<script src="/_utils/script/json2.js"></script>
+<script src="/_utils/script/jquery.js?1.2.6"></script>
+<script src="/_utils/script/jquery.couch.js?0.8.0"></script>
+<script src="/_utils/script/jquery.cookies.js"></script>
+<script src="vendor/couchapp/jquery.couchapp.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="jquery.tempest.min.js"></script>
+<script src="inventory.js"></script>
+<script type="text/javascript" charset="utf-8">
+$.CouchApp(function(app) {
+    app.loggedInNow(function(login) {
+        // Setup the inventory.
+        var inventory = Inventory();
+        inventory.load();
+
+        // Setup checkin hooks.
+        $("a.checkin").live("click", function (event) {
+            var docid = this.hash.substr(1),
+                checkin_link = $(this),
+                checkout_form;
+            console.log("checked in: " + docid);
+            app.db.openDoc(docid, {
+                success: function(doc) {
+                    delete doc.checked_out_to;
+                    delete doc.checked_out_from;
+
+                    app.db.saveDoc(doc, {
+                        success : function(resp) {
+                            var status;
+                            checkin_link.text("check out")
+                                        .removeClass("checkin")
+                                        .addClass("checkout");
+                            status = checkin_link.parent().nextAll(".status");
+                            status.text("in");
+                            console.log(doc);
+                        }
+                    });
+                }
+            });
+            event.preventDefault();
+        });
+
+        // Setup checkout hooks.
+        checkout_form = $("#checkout-dialog form");
+
+        $("#checkout-dialog").dialog({
+            autoOpen: false,
+            buttons: {
+                "Checkout": function () {
+                    var checkout_to = $("#checkout-to").val(),
+                        docid = $("#checkout-item-id").val();
+                    console.log("checked out " + docid + " to: " + checkout_to);
+                    app.db.openDoc(docid, {
+                        success: function(doc) {
+                            doc.checked_out_to = checkout_to;
+                            doc.checked_out_from = login;
+                            console.log(doc);
+                            app.db.saveDoc(doc, {
+                                success : function(resp) {
+                                    var checkout_link = $("a[href='#" + docid + "']"),
+                                        status;
+                                    checkout_link.text("check in")
+                                                 .removeClass("checkout")
+                                                 .addClass("checkin");
+                                    status = checkout_link.parent().nextAll(".status");
+                                    status.text("out to " + checkout_to);
+                                }
+                            });
+                        }
+                    });
+                    $(this).dialog("close");
+                },
+                "Cancel": function () {
+                    console.log("cancel checkout");
+                    $(this).dialog("close");
+                }
+            },
+            close: function () {
+                checkout_form.find("input").val("");
+            }
+        });
+        checkout_form.submit(function () {
+            event.preventDefault();
+            return false;
+            $(this).parent().parent().find("button:first").click();
+        });
+
+        $("a.checkout").live("click", function (event) {
+            event.preventDefault();
+            var checkout_dialog = $("#checkout-dialog");
+
+            // Close the checkout dialog if it is already open.  This will
+            // prepare the dialog to be used for another item.
+            if (checkout_dialog.dialog("isOpen")) {
+                checkout_dialog.dialog("close");
+            }
+
+            // Load the item id for the item clicked into the checkout form's
+            // hidden item id field.
+            $("#checkout-item-id").val(this.hash.substr(1));
+
+            // Position the checkout dialog next to the link that the user
+            // clicked.
+            checkout_dialog.dialog("option", "position", [event.pageX, event.pageY])
+
+            checkout_dialog.dialog("open");
+        });
+    });
+});
+</script>
+
+</html>
