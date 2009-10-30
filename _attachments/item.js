@@ -1,6 +1,5 @@
 function Item() {
     this.render = function (template_name) {
-        console.log("Rendering item: " + this._id);
         var context = {
             id: this._id,
             name: this.name,

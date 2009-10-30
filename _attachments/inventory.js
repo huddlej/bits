@@ -26,11 +26,9 @@ function Inventory() {
 
     function render(selected_items) {
         // Render the row template for each item.
-        var i, item;
+        var i;
         for (i in selected_items) {
-            item = selected_items[i];
-            console.log(item);
-            $(selector).append(item.render(row_template_name));
+            $(selector).append(selected_items[i].render(row_template_name));
         }
     }
 
