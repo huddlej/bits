@@ -51,6 +51,7 @@
 <script src="vendor/couchapp/jquery.couchapp.js"></script>
 <script src="jquery-ui.min.js"></script>
 <script src="jquery.tempest.min.js"></script>
+<script src="item.js"></script>
 <script src="inventory.js"></script>
 <script type="text/javascript" charset="utf-8">
 $.CouchApp(function(app) {
@@ -151,6 +152,10 @@ $.CouchApp(function(app) {
 
             checkout_dialog.dialog("open");
         });
+    },
+    function() {
+        console.log(app);
+        app.go('<%= assets %>/account.html#'+document.location);
     });
 });
 </script>

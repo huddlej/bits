@@ -2,7 +2,8 @@ function Inventory() {
     var items = [],
         db_name = "bits",
         db = $.couch.db(db_name),
-        selector = "#inventory";
+        selector = "#inventory",
+        row_template_name = "row";
 
     function load() {
         db.view(
@@ -13,7 +14,8 @@ function Inventory() {
                     var i, item;
                     for (i in response["rows"]) {
                         item = response["rows"][i].doc;
-                        console.log(item);
+                        item.prototype = new Item;
+                        Item.call(item);
                         items.push(item);
                     }
                     render(items);
@@ -27,21 +29,8 @@ function Inventory() {
         var i, item;
         for (i in selected_items) {
             item = selected_items[i];
-            item.id = item._id;
-            item.tags = item.tags || "&nbsp;";
-
-            if (item.checked_out_to == null) {
-                item.status = "in";
-                item.action_class = "checkout";
-                item.action_type = "check out";
-            }
-            else {
-                item.status = "out to " + item.checked_out_to;
-                item.action_class = "checkin";
-                item.action_type = "check in";
-            }
-
-            $(selector).append($.tempest("row", item));
+            console.log(item);
+            $(selector).append(item.render(row_template_name));
         }
     }
 
